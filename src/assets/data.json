@@ -1,0 +1,44 @@
+{
+  "categories": [
+    {
+      "value": 40,
+      "heading": "Laptops"
+    },
+
+    {
+      "value": 100,
+      "heading": "Desktop"
+    },
+    {
+      "value": 80,
+      "heading": "Phone App Users"
+    }
+  ],
+
+  "transaction": [
+    {
+      "name": "M.Ali",
+      "amount": 4000,
+      "date": 4,
+      "package": 300
+    },
+    {
+      "name": "John",
+      "amount": 5100,
+      "date": 2,
+      "package": 900
+    },
+    {
+      "name": "Michael",
+      "amount": 13000,
+      "date": 91,
+      "package": 0
+    },
+    {
+      "name": "Sarah",
+      "amount": 2300,
+      "date": 4,
+      "package": 2000
+    }
+  ]
+}

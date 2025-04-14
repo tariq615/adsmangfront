@@ -1,0 +1,85 @@
+/* Global Styles */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Form Container */
+  .form {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #121212;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Form Groups */
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+  
+  /* Input Fields, Textarea, and Select */
+  .form-group input[type="text"],
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    padding: 10px;
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+  }
+  
+  .form-group input[type="text"]::placeholder,
+  .form-group textarea::placeholder {
+    color: #999;
+  }
+  
+  .form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  /* File Input */
+  .form-group input[type="file"] {
+    color: #fff;
+    background-color: transparent;
+    border: none;
+  }
+  
+  /* Error Message */
+  .error {
+    color: #ff0000;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  /* Submit Button */
+  button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(to right, #8e45fd, #2eaffe);
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #fff;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+  }
+  
+  button:hover {
+    opacity: 0.9;
+  }
+  
