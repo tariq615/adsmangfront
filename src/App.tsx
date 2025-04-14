@@ -1,11 +1,15 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Loader from "./components/Loader";
-import Start from "./pages/Start";
-import Blog from "./pages/Blog";
+// import Start from "./pages/Start";
+// import Blog from "./pages/Blog";
+// import AllBlog from "./pages/admin/AllBlog";
 
 // Admin imports
 
+const Start = lazy(() => import("./pages/Start"));
+const Blog = lazy(() => import("./pages/Blog"));
+const AllBlog = lazy(() => import("./pages/admin/AllBlog"));
 const Dashboard = lazy(() => import("./pages/admin/dashboard"));
 const Products = lazy(() => import("./pages/admin/products"));
 const Users = lazy(() => import("./pages/admin/customers"));
@@ -27,6 +31,7 @@ const App = () => {
             <Route path="/admin/product" element={<Products />} />
             <Route path="/admin/users" element={<Users />} />
             <Route path="/admin/transaction" element={<Transaction />} />
+            <Route path="/admin/blogs" element={<AllBlog />} />
 
           </Route> 
         </Routes>

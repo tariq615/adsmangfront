@@ -67,6 +67,19 @@ export class UserAuthService {
       console.error(error)
     }
   }
+
+  async getAllBlogs(token) {
+    try {
+      const blogs = await axios.get(`${conf.base_url}/admin/get-posts`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return blogs;
+    } catch (error) {
+      console.error(error);
+    }
+  }
 //   async getCurrentUser(token) {
 //     try {
 //       const profile = await axios.get(`${conf.base_url}/users/get-profile`, {

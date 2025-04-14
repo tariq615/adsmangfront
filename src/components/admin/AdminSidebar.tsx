@@ -6,7 +6,7 @@ import { RiAdvertisementFill, RiHomeFill } from "react-icons/ri";
 import { Link, Location, useLocation } from "react-router-dom";
 import { IconType } from "react-icons";
 import { IoNotifications } from "react-icons/io5";
-import { PiNotePencilBold } from "react-icons/pi";
+import { PiAcornLight, PiAddressBook, PiNotePencilBold, PiNotePencilFill } from "react-icons/pi";
 
 const AdminSidebar = () => {
   const location = useLocation();
@@ -106,7 +106,13 @@ const DivOne = ({ location }: { location: Location }) => (
       <Li
         url="/admin/blog"
         text="Blogs"
-        Icon={PiNotePencilBold}
+        Icon={PiAddressBook}
+        location={location}
+      />
+      <Li
+        url="/admin/blogs"
+        text="All Blogs"
+        Icon={PiNotePencilFill}
         location={location}
       />
     </ul>
