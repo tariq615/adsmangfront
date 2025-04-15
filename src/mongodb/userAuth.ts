@@ -25,7 +25,7 @@ export class UserAuthService {
       );
       return loginUser;
     } catch (error) {
-      console.error(error);
+      console.error(error.response.data);
     }
   }
 
@@ -44,7 +44,7 @@ export class UserAuthService {
 
       return blogPost;
     } catch (error) {
-      console.error(error);
+      console.error(error.response.data);
     }
   }
 

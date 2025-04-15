@@ -85,12 +85,12 @@ const DivOne = ({ location }: { location: Location }) => (
         Icon={IoNotifications}
         location={location}
       />
-        {/* <Li
+        <Li
           url="/admin/blog"
           text="Blogs"
           Icon={PiAddressBook}
           location={location}
-        /> */}
+        />
         <Li
           url="/admin/blogs"
           text="All Blogs"
