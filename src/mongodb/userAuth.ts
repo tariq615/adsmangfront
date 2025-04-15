@@ -11,7 +11,7 @@ export class UserAuthService {
       );
       return registeredUser;
     } catch (error) {
-      console.error(error);
+      console.error(error.response.data);
     }
   }
 

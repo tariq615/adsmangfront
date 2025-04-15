@@ -17,12 +17,11 @@ const Signup = () => {
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const userData = new FormData();
-    userData.append("name", name);
-    userData.append("email", email);
-    userData.append("password", password);
-    // userData.append("image", image);
-
+    const userData = {
+      name: name,
+      email: email,
+      password: password,
+    };
     try {
       const response = await userAuth.createAccount(userData);
       if (response.status === 201) {
