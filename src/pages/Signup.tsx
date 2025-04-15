@@ -8,7 +8,7 @@ const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [image, setImage] = useState<File | null>(null);
+  // const [image, setImage] = useState<File | null>(null);
   const [error, setError] = useState([]);
 
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ const Signup = () => {
     userData.append("name", name);
     userData.append("email", email);
     userData.append("password", password);
-    userData.append("image", image);
+    // userData.append("image", image);
 
     try {
       const response = await userAuth.createAccount(userData);
@@ -41,11 +41,11 @@ const Signup = () => {
       setError(error);
     }
   };
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setImage(e.target.files[0]);
-    }
-  };
+  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files && e.target.files.length > 0) {
+  //     setImage(e.target.files[0]);
+  //   }
+  // };
   return (
     <div className="login-wrapper">
       <div className="login-box">
