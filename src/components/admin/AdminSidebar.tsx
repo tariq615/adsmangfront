@@ -85,6 +85,18 @@ const DivOne = ({ location }: { location: Location }) => (
         Icon={IoNotifications}
         location={location}
       />
+        <Li
+          url="/admin/blog"
+          text="Blogs"
+          Icon={PiAddressBook}
+          location={location}
+        />
+        <Li
+          url="/admin/blogs"
+          text="All Blogs"
+          Icon={PiNotePencilFill}
+          location={location}
+        />
       <Li
         url="/admin/users"
         text="Users"
@@ -101,18 +113,6 @@ const DivOne = ({ location }: { location: Location }) => (
         url="#"
         text="Advertisements"
         Icon={RiAdvertisementFill}
-        location={location}
-      />
-      <Li
-        url="/admin/blog"
-        text="Blogs"
-        Icon={PiAddressBook}
-        location={location}
-      />
-      <Li
-        url="/admin/blogs"
-        text="All Blogs"
-        Icon={PiNotePencilFill}
         location={location}
       />
     </ul>

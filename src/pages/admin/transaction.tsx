@@ -1,83 +1,116 @@
-import { ReactElement, useState } from "react";
-import { Link } from "react-router-dom";
+import { ReactElement, useEffect, useState } from "react";
+import { FaTrash } from "react-icons/fa";
 import { Column } from "react-table";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
+import userAuth from "../../mongodb/userAuth"; // Update with your actual path
+// import { User } from "../../types/types"; // Define or import your User type
 
 interface DataType {
-  user: string;
-  amount: number;
-  discount: number;
-  quantity: number;
-  status: ReactElement;
+  avatar: ReactElement;
+  name: string;
+  email: string;
+  country: string;
+  role: string;
+  subscription: string;
   action: ReactElement;
 }
-
-const arr: Array<DataType> = [
-  {
-    user: "Charas",
-    amount: 4500,
-    discount: 400,
-    status: <span className="red">Processing</span>,
-    quantity: 3,
-    action: <Link to="/admin/transaction/sajknaskd">Manage</Link>,
-  },
-
-  {
-    user: "Xavirors",
-    amount: 6999,
-    discount: 400,
-    status: <span className="green">Shipped</span>,
-    quantity: 6,
-    action: <Link to="/admin/transaction/sajknaskd">Manage</Link>,
-  },
-  {
-    user: "Xavirors",
-    amount: 6999,
-    discount: 400,
-    status: <span className="purple">Delivered</span>,
-    quantity: 6,
-    action: <Link to="/admin/transaction/sajknaskd">Manage</Link>,
-  },
-];
 
 const columns: Column<DataType>[] = [
   {
     Header: "Avatar",
-    accessor: "user",
+    accessor: "avatar",
   },
   {
-    Header: "Amount",
-    accessor: "amount",
+    Header: "Name",
+    accessor: "name",
   },
   {
-    Header: "Discount",
-    accessor: "discount",
+    Header: "Country",
+    accessor: "country",
   },
   {
-    Header: "Quantity",
-    accessor: "quantity",
+    Header: "Email",
+    accessor: "email",
   },
   {
-    Header: "Status",
-    accessor: "status",
+    Header: "Role",
+    accessor: "role",
   },
   {
-    Header: "Action",
-    accessor: "action",
-  },
+    Header: "Subscription",
+    accessor: "subscription",
+  }
 ];
 
 const Transaction = () => {
-  const [rows, setRows] = useState<DataType[]>(arr);
+  const [rows, setRows] = useState<DataType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await userAuth.getAllUsers(
+        localStorage.getItem("token")
+      );
+      
+      const mappedData = response.data.data.map((user) => ({
+        avatar: (
+          <img
+            style={{ borderRadius: "50%", width: "40px", height: "40px" }}
+            src={user.avatar}
+            alt={user.name}
+          />
+        ),
+        name: user.name,
+        email: user.email,
+        country: user.country,
+        role: user.role,
+        subscription: user.isSubscribed ? "Active" : "Inactive",
+        action: (
+          <button onClick={() => handleDelete(user._id)}>
+            <FaTrash style={{ color: "red", cursor: "pointer" }} />
+          </button>
+        ),
+      }));
+
+      setRows(mappedData);
+      setError(null);
+    } catch (err) {
+      setError("Failed to fetch users. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (userId: string) => {
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      try {
+        await userAuth.deleteUser(userId, localStorage.getItem("token"));
+        fetchUsers(); // Refresh the list after deletion
+      } catch (err) {
+        setError("Failed to delete user. Please try again.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+    const interval = setInterval(fetchUsers, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const Table = TableHOC<DataType>(
     columns,
     rows,
     "dashboard-product-box",
-    "Transactions",
+    "Customers",
     rows.length > 6
   )();
+
+  if (loading) return <div className="admin-container">Loading...</div>;
+  if (error) return <div className="admin-container">Error: {error}</div>;
+
   return (
     <div className="admin-container">
       <AdminSidebar />

@@ -1,15 +1,18 @@
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { Column } from "react-table";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
+import userAuth from "../../mongodb/userAuth"; // Update with your actual path
+// import { User } from "../../types/types"; // Define or import your User type
 
 interface DataType {
   avatar: ReactElement;
   name: string;
   email: string;
-  gender: string;
+  country: string;
   role: string;
+  subscription: string;
   action: ReactElement;
 }
 
@@ -23,8 +26,8 @@ const columns: Column<DataType>[] = [
     accessor: "name",
   },
   {
-    Header: "Gender",
-    accessor: "gender",
+    Header: "Country",
+    accessor: "country",
   },
   {
     Header: "Email",
@@ -35,60 +38,67 @@ const columns: Column<DataType>[] = [
     accessor: "role",
   },
   {
-    Header: "Action",
-    accessor: "action",
-  },
-];
-
-const img = "https://randomuser.me/api/portraits/women/54.jpg";
-const img2 = "https://randomuser.me/api/portraits/women/50.jpg";
-
-const arr: Array<DataType> = [
-  {
-    avatar: (
-      <img
-        style={{
-          borderRadius: "50%",
-        }}
-        src={img}
-        alt="Shoes"
-      />
-    ),
-    name: "Emily Palmer",
-    email: "emily.palmer@example.com",
-    gender: "female",
-    role: "user",
-    action: (
-      <button>
-        <FaTrash />
-      </button>
-    ),
-  },
-
-  {
-    avatar: (
-      <img
-        style={{
-          borderRadius: "50%",
-        }}
-        src={img2}
-        alt="Shoes"
-      />
-    ),
-    name: "May Scoot",
-    email: "aunt.may@example.com",
-    gender: "female",
-    role: "user",
-    action: (
-      <button>
-        <FaTrash />
-      </button>
-    ),
-  },
+    Header: "Subscription",
+    accessor: "subscription",
+  }
 ];
 
 const Customers = () => {
-  const [rows, setRows] = useState<DataType[]>(arr);
+  const [rows, setRows] = useState<DataType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await userAuth.getAllUsers(
+        localStorage.getItem("token")
+      );
+      
+      const mappedData = response.data.data.map((user) => ({
+        avatar: (
+          <img
+            style={{ borderRadius: "50%", width: "40px", height: "40px" }}
+            src={user.avatar}
+            alt={user.name}
+          />
+        ),
+        name: user.name,
+        email: user.email,
+        country: user.country,
+        role: user.role,
+        subscription: user.isSubscribed ? "Active" : "Inactive",
+        action: (
+          <button onClick={() => handleDelete(user._id)}>
+            <FaTrash style={{ color: "red", cursor: "pointer" }} />
+          </button>
+        ),
+      }));
+
+      setRows(mappedData);
+      setError(null);
+    } catch (err) {
+      setError("Failed to fetch users. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (userId: string) => {
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      try {
+        await userAuth.deleteUser(userId, localStorage.getItem("token"));
+        fetchUsers(); // Refresh the list after deletion
+      } catch (err) {
+        setError("Failed to delete user. Please try again.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+    const interval = setInterval(fetchUsers, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const Table = TableHOC<DataType>(
     columns,
@@ -97,6 +107,9 @@ const Customers = () => {
     "Customers",
     rows.length > 6
   )();
+
+  if (loading) return <div className="admin-container">Loading...</div>;
+  if (error) return <div className="admin-container">Error: {error}</div>;
 
   return (
     <div className="admin-container">

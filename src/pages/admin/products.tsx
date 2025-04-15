@@ -1,82 +1,120 @@
-import { ReactElement, useState } from "react";
-import { FaPlus } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { ReactElement, useEffect, useState } from "react";
+import { FaTrash } from "react-icons/fa";
 import { Column } from "react-table";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
+import userAuth from "../../mongodb/userAuth"; // Update with your actual path
+// import { User } from "../../types/types"; // Define or import your User type
 
 interface DataType {
-  photo: ReactElement;
+  avatar: ReactElement;
   name: string;
-  price: number;
-  stock: number;
+  email: string;
+  country: string;
+  role: string;
+  subscription: string;
   action: ReactElement;
 }
 
 const columns: Column<DataType>[] = [
   {
-    Header: "Photo",
-    accessor: "photo",
+    Header: "Avatar",
+    accessor: "avatar",
   },
   {
     Header: "Name",
     accessor: "name",
   },
   {
-    Header: "Price",
-    accessor: "price",
+    Header: "Country",
+    accessor: "country",
   },
   {
-    Header: "Stock",
-    accessor: "stock",
+    Header: "Email",
+    accessor: "email",
   },
   {
-    Header: "Action",
-    accessor: "action",
+    Header: "Role",
+    accessor: "role",
   },
-];
-
-const img =
-  "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8c2hvZXN8ZW58MHx8MHx8&w=1000&q=804";
-
-const img2 = "https://m.media-amazon.com/images/I/514T0SvwkHL._SL1500_.jpg";
-
-const arr: Array<DataType> = [
   {
-    photo: <img src={img} alt="Shoes" />,
-    name: "Puma Shoes Air Jordan Cook Nigga 2023",
-    price: 690,
-    stock: 3,
-    action: <Link to="/admin/product/sajknaskd">Manage</Link>,
-  },
-
-  {
-    photo: <img src={img2} alt="Shoes" />,
-    name: "Macbook",
-    price: 232223,
-    stock: 213,
-    action: <Link to="/admin/product/sdaskdnkasjdn">Manage</Link>,
-  },
+    Header: "Subscription",
+    accessor: "subscription",
+  }
 ];
 
 const Products = () => {
-  const [rows, setRows] = useState<DataType[]>(arr);
+  const [rows, setRows] = useState<DataType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await userAuth.getAllUsers(
+        localStorage.getItem("token")
+      );
+      
+      const mappedData = response.data.data.map((user) => ({
+        avatar: (
+          <img
+            style={{ borderRadius: "50%", width: "40px", height: "40px" }}
+            src={user.avatar}
+            alt={user.name}
+          />
+        ),
+        name: user.name,
+        email: user.email,
+        country: user.country,
+        role: user.role,
+        subscription: user.isSubscribed ? "Active" : "Inactive",
+        action: (
+          <button onClick={() => handleDelete(user._id)}>
+            <FaTrash style={{ color: "red", cursor: "pointer" }} />
+          </button>
+        ),
+      }));
+
+      setRows(mappedData);
+      setError(null);
+    } catch (err) {
+      setError("Failed to fetch users. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (userId: string) => {
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      try {
+        await userAuth.deleteUser(userId, localStorage.getItem("token"));
+        fetchUsers(); // Refresh the list after deletion
+      } catch (err) {
+        setError("Failed to delete user. Please try again.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+    const interval = setInterval(fetchUsers, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const Table = TableHOC<DataType>(
     columns,
     rows,
     "dashboard-product-box",
-    "Products",
+    "Customers",
     rows.length > 6
   )();
+
+  if (loading) return <div className="admin-container">Loading...</div>;
+  if (error) return <div className="admin-container">Error: {error}</div>;
 
   return (
     <div className="admin-container">
       <AdminSidebar />
       <main>{Table}</main>
-      <Link to="/admin/product/new" className="create-product-btn">
-        <FaPlus />
-      </Link>
     </div>
   );
 };

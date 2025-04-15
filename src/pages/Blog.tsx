@@ -48,7 +48,7 @@ const Blog = () => {
       );
       console.log(response);
       if (response.status === 201) {
-        navigate("/admin/dashboard");
+        navigate("/admin/blogs");
       }
     } catch (error: any) {
       setError(error);

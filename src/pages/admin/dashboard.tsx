@@ -9,22 +9,16 @@ import data from "../../assets/data.json";
 import userAuth from "../../mongodb/userAuth";
 import { useState, useEffect } from "react";
 
-
 const userImg =
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJxA5cTf-5dh5Eusm0puHbvAhOrCRPtckzjA&usqp";
 
-  
-  
-  
-  const Dashboard = () => {
+const Dashboard = () => {
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
         const stat = await userAuth.getStats(localStorage.getItem("token"));
-        console.log(data);
-        
         setStats(stat?.data.data);
       } catch (error) {
         console.error("Error fetching stats:", error);
@@ -52,67 +46,86 @@ const userImg =
         </div>
 
         <section className="widget-container">
-  <WidgetItem
-    percent={Math.round((stats?.totalRevenue / 5000) * 100)} // Adjust denominator as needed
-    amount={true}
-    value={stats?.totalRevenue || 0}
-    heading="Revenue"
-    color="rgb(0, 115, 255)"
-  />
-  <WidgetItem
-    percent={Math.round((stats?.totalSubscribers / 100) * 100)} // Example calculation
-    value={stats?.recentUsers?.length || 0}
-    color="rgb(0, 198, 202)"
-    heading="Recent Users"
-  />
-  <WidgetItem
-    percent={Math.round((stats?.totalClicks / 1000) * 100)} // Example calculation
-    value={stats?.totalClicks || 0}
-    color="rgb(255, 196, 0)"
-    heading="Total Clicks"
-  />
-  <WidgetItem
-    percent={Math.round((stats?.totalSubscribers / 50) * 100)} // Example calculation
-    value={stats?.totalSubscribers || 0}
-    color="rgb(76, 0, 255)"
-    heading="Subscriptions"
-  />
-</section>
+          <WidgetItem
+            percent={Math.round((stats?.totalRevenue / 5000) * 100)} // Adjust denominator as needed
+            amount={true}
+            value={stats?.totalRevenue || 0}
+            heading="Revenue"
+            color="rgb(0, 115, 255)"
+          />
+          <WidgetItem
+            percent={Math.round((stats?.totalSubscribers / 100) * 100)} // Example calculation
+            value={stats?.recentUsers?.length || 0}
+            color="rgb(0, 198, 202)"
+            heading="Recent Users"
+          />
+          <WidgetItem
+            percent={Math.round((stats?.totalClicks / 1000) * 100)} // Example calculation
+            value={stats?.totalClicks || 0}
+            color="rgb(255, 196, 0)"
+            heading="Total Clicks"
+          />
+          <WidgetItem
+            percent={Math.round((stats?.totalSubscribers / 50) * 100)} // Example calculation
+            value={stats?.totalSubscribers || 0}
+            color="rgb(76, 0, 255)"
+            heading="Subscriptions"
+          />
+        </section>
 
-<section className="graph-container">
-  <CurvedLineChart
-    data={[
-      500, 1200, 3100, 9000, 
-      11000, stats?.totalRevenue || 15900, // Blend static data with real total
-      17000, 20000, 23000, 25500,
-      27000, 27800
-    ]}
-    labels={[
-      "January", "February", "March", "April",
-      "May", "June", "July", "August",
-      "September", "October", "November", "December"
-    ]}
-    label="Total Revenue"
-    gradientFrom="rgba(0, 255, 164, 0.4)"
-    gradientTo="rgba(0, 255, 164, 0)"
-    borderColor="#00ffa4"
-  />
-</section>
+        <section className="graph-container">
+          <CurvedLineChart
+            data={[
+              500,
+              1200,
+              3100,
+              9000,
+              11000,
+              stats?.totalRevenue || 15900, // Blend static data with real total
+              17000,
+              20000,
+              23000,
+              25500,
+              27000,
+              27800,
+            ]}
+            labels={[
+              "January",
+              "February",
+              "March",
+              "April",
+              "May",
+              "June",
+              "July",
+              "August",
+              "September",
+              "October",
+              "November",
+              "December",
+            ]}
+            label="Total Revenue"
+            gradientFrom="rgba(0, 255, 164, 0.4)"
+            gradientTo="rgba(0, 255, 164, 0)"
+            borderColor="#00ffa4"
+          />
+        </section>
 
         <section className="transaction-container">
           <div className="dashboard-categories">
             <h2>Users By country</h2>
 
             <div>
-      {stats?.usersByCountry?.map((country) => (
-        <CategoryItem
-          key={country._id}
-          value={Math.round((country.count / stats.recentUsers.length) * 100)}
-          heading={country._id || 'Unknown'}
-          color={`hsl(${Math.random() * 360}, 70%, 50%)`}
-        />
-      ))}
-    </div>
+              {stats?.usersByCountry?.map((country) => (
+                <CategoryItem
+                  key={country._id}
+                  value={Math.round(
+                    (country.count / stats.recentUsers.length) * 100
+                  )}
+                  heading={country._id || "Unknown"}
+                  color={`hsl(${Math.random() * 360}, 70%, 50%)`}
+                />
+              ))}
+            </div>
           </div>
           <Table data={data.transaction} />
         </section>

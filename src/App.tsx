@@ -1,12 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Loader from "./components/Loader";
-// import Start from "./pages/Start";
-// import Blog from "./pages/Blog";
-// import AllBlog from "./pages/admin/AllBlog";
-
 // Admin imports
 
+const Signup = lazy(() => import("./pages/Signup"));
 const Start = lazy(() => import("./pages/Start"));
 const Blog = lazy(() => import("./pages/Blog"));
 const AllBlog = lazy(() => import("./pages/admin/AllBlog"));
@@ -26,6 +23,7 @@ const App = () => {
           <Route
           >
             <Route path="/" element={<Start />} />
+            <Route path="/signup" element={<Signup />} />
             <Route path="/admin/blog" element={<Blog />} />
             <Route path="/admin/dashboard" element={<Dashboard />} />
             <Route path="/admin/product" element={<Products />} />
