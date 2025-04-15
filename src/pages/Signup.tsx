@@ -82,16 +82,6 @@ const Signup = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-
-            <label className="form-label" htmlFor="featuredImage">Featured Image:</label>
-            <input
-              type="file"
-              id="featuredImage"
-              className="form-input"
-              accept="image/png, image/jpg, image/jpeg, image/gif, image/webp"
-              onChange={handleFileChange}
-            />
-
             {error.length > 0 && (
               <ul className="text-red-500 text-sm mt-2">
                 {error.map((err, index) => (
