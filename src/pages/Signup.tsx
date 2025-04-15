@@ -37,7 +37,7 @@ const Signup = () => {
       setName("");
       setEmail("");
       setPassword("");
-      setImage(null);
+      // setImage(null);
       setError(error);
     }
   };
